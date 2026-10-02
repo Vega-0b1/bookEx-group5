@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Layout</title>
+    <link href="{% static 'main.css' %}" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<!-- Top Banner -->
+<header class="banner">
+    <h1>Website Banner</h1>
+    <ul>
+        {% block sidenav %}
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        {% endblock sidenav %}
+    </ul>
+</header>
+
+<!-- Main Layout -->
+<div class="container">
+
+    <!-- Left Menu -->
+    <nav class="sidebar">
+        <ul>
+            <li><a href="#">Menu Item 1</a></li>
+            <li><a href="#">Menu Item 2</a></li>
+            <li><a href="#">Menu Item 3</a></li>
+        </ul>
+    </nav>
+
+    <!-- Right Main Content -->
+    <main class="content">
+        <h2>Main Content</h2>
+        <p>
+            This is where your main content goes.
+            You can add text, images, forms, or anything else here.
+        </p>
+    </main>
+
+</div>
+
+<!-- Bottom Footer -->
+<footer class="footer">
+    <p>&copy; 2026 Your Company Name. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
