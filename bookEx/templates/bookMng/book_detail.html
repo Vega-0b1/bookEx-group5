@@ -56,7 +56,7 @@
     {% if user.is_authenticated %}
     <form method = "post" action="{% url 'toggle_favorite' book.id %}">
     {% csrf_token %}
-    <button type = "submit">Favorite</button>
+    <button type = "submit" class="{% if is_favorite %}favorited{% endif %}">{% if is_favorite %}Favorited{% else %}Favorite{% endif %}</button>
     </form>
     {% endif %}
 {% endblock content %}

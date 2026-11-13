@@ -91,7 +91,8 @@ def mybooks(request):
                   'bookMng/mybooks.html',
                   {
                       'item_list': MainMenu.objects.all(),
-                      'books': books
+                      'books': books,
+                      'favorites': Book.objects.filter(favorite__user=request.user),
                   })
 
 
@@ -99,11 +100,18 @@ def book_detail(request, book_id):
     book = Book.objects.get(id=book_id)
 
     book.pic_path = book.picture.url[14:]
+
+    if request.user.is_authenticated:
+        is_favorite = Favorite.objects.filter(user=request.user, book = book).exists()
+    else:
+        is_favorite = False
+
     return render(request,
                   'bookMng/book_detail.html',
                   {
                       'item_list': MainMenu.objects.all(),
-                      'book': book
+                      'book': book,
+                      'is_favorite': is_favorite,
                   })
 
 
