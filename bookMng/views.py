@@ -14,6 +14,11 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 
+from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest
+from django.shortcuts import get_object_or_404, redirect
+from .models import Favorite
+
 
 # Create your views here.
 
@@ -121,3 +126,10 @@ def book_delete(request, book_id):
                   {
                       'item_list': MainMenu.objects.all(),
                   })
+@login_required
+def toggle_favorite(request: HttpRequest, book_id: int)->HttpResponseRedirect:
+    book: Book = get_object_or_404(Book, id = book_id)
+    favorite, created = Favorite.objects.get_or_create(user=request.user, book=book)
+    if not created:
+        favorite.delete()
+    return redirect('book_detail',book_id = book.id)
