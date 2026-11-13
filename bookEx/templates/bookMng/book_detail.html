@@ -53,4 +53,10 @@
            </td>
       </tr>
    </table>
+    {% if user.is_authenticated %}
+    <form method = "post" action="{% url 'toggle_favorite' book.id %}">
+    {% csrf_token %}
+    <button type = "submit">Favorite</button>
+    </form>
+    {% endif %}
 {% endblock content %}
