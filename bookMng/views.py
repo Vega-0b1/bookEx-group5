@@ -82,7 +82,7 @@ def displaybooks(request):
                       'books': books
                   })
 
-
+@login_required
 def mybooks(request):
     books = Book.objects.filter(username=request.user)
     for b in books:
