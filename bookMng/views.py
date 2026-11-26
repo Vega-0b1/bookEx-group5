@@ -19,6 +19,12 @@ from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, redirect
 from .models import Favorite
 
+from django.contrib.auth.decorators import login_required
+from django.db.models import Avg
+from django.shortcuts import get_object_or_404, redirect
+
+from .forms import RatingForm
+from .models import Rating
 
 # Create your views here.
 
@@ -141,3 +147,54 @@ def toggle_favorite(request: HttpRequest, book_id: int)->HttpResponseRedirect:
     if not created:
         favorite.delete()
     return redirect('book_detail',book_id = book.id)
+
+
+@login_required
+def rate(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+
+    existing_rating = Rating.objects.filter(
+        book=book,
+        user=request.user
+    ).first()
+
+    if request.method == 'POST':
+        form = RatingForm(request.POST)
+
+        if form.is_valid():
+            Rating.objects.update_or_create(
+                book=book,
+                user=request.user,
+                defaults={
+                    'score': form.cleaned_data['score']
+                }
+            )
+
+            return redirect('rate', book_id=book.id)
+    else:
+        form = RatingForm(
+            initial={
+                'score': (
+                    existing_rating.score
+                    if existing_rating else ''
+                )
+            }
+        )
+
+    ratings = book.ratings.all()
+    average_rating = ratings.aggregate(
+        average=Avg('score')
+    )['average']
+
+    return render(
+        request,
+        'bookMng/rate.html',
+        {
+            'item_list': MainMenu.objects.all(),
+            'book': book,
+            'form': form,
+            'average_rating': average_rating,
+            'rating_count': ratings.count(),
+            'existing_rating': existing_rating,
+        }
+    )
