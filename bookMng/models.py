@@ -32,3 +32,24 @@ class Favorite(models.Model):
         ]
 
 
+class Rating(models.Model):
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE,
+        related_name='ratings'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+    score = models.PositiveSmallIntegerField(
+        choices=[(number, str(number)) for number in range(1, 6)]
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['book', 'user'],
+                name='unique_book_user_rating'
+            )
+        ]
