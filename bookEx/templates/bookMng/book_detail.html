@@ -59,4 +59,8 @@
     <button type = "submit" class="{% if is_favorite %}favorited{% endif %}">{% if is_favorite %}Favorited{% else %}Favorite{% endif %}</button>
     </form>
     {% endif %}
+
+   <p>
+       <a href="{% url 'rate' book.id %}">Rate this book</a>
+   </p>
 {% endblock content %}
